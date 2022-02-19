@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "457003289885",
+    "project_id": "talkr-7c0eb",
+    "storage_bucket": "talkr-7c0eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457003289885:android:f5feb40d8677d0cd5ee5f4",
+        "android_client_info": {
+          "package_name": "com.example.talkr_demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "457003289885-bmk7b8a9gd5kk69e83de52c4r9kds38o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5ckVvcFbxiit0fbactcjyjY09sQ1NmGA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "457003289885-bmk7b8a9gd5kk69e83de52c4r9kds38o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
