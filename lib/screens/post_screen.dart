@@ -33,7 +33,7 @@ class _PostScreenState extends State<PostScreen> {
         return true;
       },
       child: ModalProgressHUD(
-        progressIndicator: circularProgress(context),
+        progressIndicator: CircularProgressIndicator(),
         child: Scaffold(
           key: viewModel.scaffoldKey,
           appBar: AppBar(
@@ -253,7 +253,7 @@ class UserModel {
 
   String get email => email;
 
-  static UserModel fromJson(Object? data) {}
+  UserModel.fromJson(Object? data) {}
 }
 
 class Feather {
