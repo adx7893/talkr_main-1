@@ -6,12 +6,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:social_media_app/models/post.dart';
-import 'package:social_media_app/screens/mainscreen.dart';
-import 'package:social_media_app/services/post_service.dart';
-import 'package:social_media_app/services/user_service.dart';
-import 'package:social_media_app/utils/constants.dart';
-import 'package:social_media_app/utils/firebase.dart';
+import 'package:talkr_demo/main.dart';
+import 'package:talkr_demo/screens/post_screen.dart';
 
 class PostsViewModel extends ChangeNotifier {
   //Services
@@ -24,26 +20,28 @@ class PostsViewModel extends ChangeNotifier {
 
   //Variables
   bool loading = false;
-  String username;
-  File mediaUrl;
+  late String username;
+  late File mediaUrl;
   final picker = ImagePicker();
-  String location;
-  Position position;
-  Placemark placemark;
-  String bio;
-  String description;
-  String email;
-  String commentData;
-  String ownerId;
-  String userId;
-  String type;
-  File userDp;
-  String imgLink;
+  late String location;
+  late Position position;
+  late Placemark placemark;
+  late String bio;
+  late String description;
+  late String email;
+  late String commentData;
+  late String ownerId;
+  late String userId;
+  late String type;
+  late File userDp;
+  late String imgLink;
   bool edit = false;
-  String id;
+  late String id;
 
   //controllers
   TextEditingController locationTEC = TextEditingController();
+
+  get Geolocator => null;
 
   //Setters
   setEdit(bool val) {
@@ -90,15 +88,16 @@ class PostsViewModel extends ChangeNotifier {
   }
 
   //Functions
-  pickImage({bool camera = false, BuildContext context}) async {
+  pickImage({bool camera = false, required BuildContext context}) async {
     loading = true;
     notifyListeners();
     try {
-      PickedFile pickedFile = await picker.getImage(
+      PickedFile? pickedFile = await picker.getImage(
         source: camera ? ImageSource.camera : ImageSource.gallery,
       );
+      var Constants;
       File croppedFile = await ImageCropper.cropImage(
-        sourcePath: pickedFile.path,
+        sourcePath: pickedFile!.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
           CropAspectRatioPreset.ratio3x2,
@@ -123,7 +122,7 @@ class PostsViewModel extends ChangeNotifier {
     } catch (e) {
       loading = false;
       notifyListeners();
-      showInSnackBar('Cancelled',context);
+      showInSnackBar('Cancelled', context);
     }
   }
 
@@ -138,6 +137,7 @@ class PostsViewModel extends ChangeNotifier {
       print(rPermission);
       await getLocation();
     } else {
+      var LocationAccuracy;
       position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
       List<Placemark> placemarks =
@@ -163,43 +163,108 @@ class PostsViewModel extends ChangeNotifier {
       print(e);
       loading = false;
       resetPost();
-      showInSnackBar('Uploaded successfully!',context);
+      showInSnackBar('Uploaded successfully!', context);
       notifyListeners();
     }
   }
 
   uploadProfilePicture(BuildContext context) async {
     if (mediaUrl == null) {
-      showInSnackBar('Please select an image',context);
+      showInSnackBar('Please select an image', context);
     } else {
       try {
         loading = true;
         notifyListeners();
+        var firebaseAuth;
         await postService.uploadProfilePicture(
             mediaUrl, firebaseAuth.currentUser);
         loading = false;
         Navigator.of(context)
-            .pushReplacement(CupertinoPageRoute(builder: (_) => TabScreen()));
+            .pushReplacement(CupertinoPageRoute(builder: (_) => PostScreen()));
         notifyListeners();
       } catch (e) {
         print(e);
         loading = false;
-        showInSnackBar('Uploaded successfully!',context);
+        showInSnackBar('Uploaded successfully!', context);
         notifyListeners();
       }
     }
   }
 
   resetPost() {
-    mediaUrl = null;
-    description = null;
-    location = null;
-    edit = null;
+    mediaUrl = mediaUrl;
+    description = description;
+    location = location;
+    edit = edit;
     notifyListeners();
   }
 
-void showInSnackBar(String value,context) {
+  void showInSnackBar(String value, context) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
   }
+
+  AndroidUiSettings(
+      {required String toolbarTitle,
+      toolbarColor,
+      required Color toolbarWidgetColor,
+      initAspectRatio,
+      required bool lockAspectRatio}) {}
+
+  IOSUiSettings({required double minimumAspectRatio}) {}
+
+  placemarkFromCoordinates(latitude, longitude) {}
+}
+
+class LocationPermission {
+  static var denied;
+  static var deniedForever;
+}
+
+class UserService {}
+
+class CropAspectRatioPreset {
+  static var square;
+
+  static var ratio3x2;
+
+  static var original;
+
+  static var ratio4x3;
+
+  static var ratio16x9;
+}
+
+class ImageCropper {
+  static cropImage(
+      {required String sourcePath,
+      required List aspectRatioPresets,
+      androidUiSettings,
+      iosUiSettings}) {}
+}
+
+class PostModel {
+  late String description;
+
+  late String mediaUrl;
+
+  late String location;
+}
+
+class Placemark {
+  var locality;
+
+  var country;
+}
+
+class Position {
+  get latitude => null;
+
+  get longitude => null;
+}
+
+class PostService {
+  uploadProfilePicture(File mediaUrl, currentUser) {}
+
+  uploadPost(File mediaUrl, String location, String description) {}
 }

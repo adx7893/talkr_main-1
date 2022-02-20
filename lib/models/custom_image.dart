@@ -9,7 +9,7 @@ class CustomImage extends StatelessWidget {
   final BoxFit fit;
 
   CustomImage({
-    this.imageUrl,
+    required this.imageUrl,
     this.height = 100.0,
     this.width = double.infinity,
     this.fit = BoxFit.cover,
@@ -18,7 +18,7 @@ class CustomImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: imageUrl ?? '',
+      imageUrl: imageUrl,
       errorWidget: (context, url, error) {
         return Icon(Icons.error);
       },
